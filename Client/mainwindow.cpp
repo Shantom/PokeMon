@@ -5,35 +5,42 @@
 #include "pmagility.h"
 #include "pmshield.h"
 #include "pmdefense.h"
+#include "logindialog.h"
 #include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    serverAddress("127.0.0.1")
+
 {
     ui->setupUi(this);
+
+    socket=new QUdpSocket(this);
+    socket->bind(selfPort);
 
     qsrand(QTime::currentTime().msec());
     A=new PMAgility(Epic);
 //    A->gainExp(200);
     QString info_A=A->getInfomation();
 
-    qsrand(QTime::currentTime().msec()*2);
-    B=new PMStrength(Epic);
-//    B->gainExp(200);
-    QString info_B=B->getInfomation();
 
     ui->labelPM_1->setText(info_A);
-    ui->labelPM_2->setText(info_B);
     ui->comboBox_Rarity_1->setCurrentIndex(0);
-    ui->comboBox_Rarity_2->setCurrentIndex(0);
     ui->comboBox_Type_1->setCurrentIndex(0);
-    ui->comboBox_Type_2->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    /*log out*/
+    QByteArray datagram;//datagram to send
+    QDataStream outStream(&datagram,QIODevice::ReadWrite);
+    datagramType type=EXIT;
+    qDebug()<<userName;
+    outStream<<type<<userName;
+    socket->writeDatagram(datagram,serverAddress,serverPort);
+
 }
 
 void MainWindow::on_pushButton_LvUp_1_clicked()
@@ -59,30 +66,6 @@ void MainWindow::on_pushButton_Attack_1_clicked()
     ui->label_moveInfo_1->setText(moveInfo);
 }
 
-void MainWindow::on_pushButton_Attack_2_clicked()
-{
-    int movement=B->move();
-    QString moveInfo;
-    if(movement==ordAttack)
-        moveInfo+=tr("PokeMon B gives a hit on A.");
-    else
-        moveInfo+= tr("PokeMon B uses his limitbreak ")+
-                LimitBreak_toString[movement]+".";
-    ui->label_moveInfo_2->setText(moveInfo);
-}
-
-void MainWindow::on_pushButton_LvUp_2_clicked()
-{
-    B->gainExp(expToLvUp[B->level]-expToLvUp[B->level-1]);
-
-    if(B->level==15)
-        ui->pushButton_LvUp_2->setEnabled(false);
-
-    QString info_B=B->getInfomation();
-    ui->labelPM_2->setText(info_B);
-
-}
-
 void MainWindow::on_pushButton_LvMax_1_clicked()
 {
     A->gainExp(expToLvUp[14]);
@@ -92,17 +75,6 @@ void MainWindow::on_pushButton_LvMax_1_clicked()
     ui->labelPM_1->setText(info_A);
 
 }
-
-void MainWindow::on_pushButton_LvMax_2_clicked()
-{
-    B->gainExp(expToLvUp[14]);
-    ui->pushButton_LvMax_2->setEnabled(false);
-    ui->pushButton_LvUp_2->setEnabled(false);
-    QString info_B=B->getInfomation();
-    ui->labelPM_2->setText(info_B);
-
-}
-
 
 void MainWindow::on_pushButton_Create_1_clicked()
 {
@@ -132,31 +104,3 @@ void MainWindow::on_pushButton_Create_1_clicked()
     ui->pushButton_LvUp_1->setEnabled(true);
 }
 
-void MainWindow::on_pushButton_Create_2_clicked()
-{
-    delete B;
-    PMType type=(PMType)ui->comboBox_Type_2->currentIndex();
-    PMRarity rarity=(PMRarity)ui->comboBox_Rarity_2->currentIndex();
-    switch (type) {
-    case Strength:
-        B=new PMStrength(rarity);
-        break;
-    case Defense:
-        B=new PMDefense(rarity);
-        break;
-    case Shield:
-        B=new PMShield(rarity);
-        break;
-    case Agility:
-        B=new PMAgility(rarity);
-        break;
-    default:
-        break;
-    }
-    QString info_B=B->getInfomation();
-    ui->labelPM_2->setText(info_B);
-
-    ui->pushButton_LvMax_2->setEnabled(true);
-    ui->pushButton_LvUp_2->setEnabled(true);
-
-}

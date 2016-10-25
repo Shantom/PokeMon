@@ -24,9 +24,9 @@ const double HealthGain=15;
 const double SpeedGain=60;
 
 const int ordAttack=100;
-extern QList<int> expToLvUp;
-extern double RarityGainRate[4];
-extern QList<QString> LimitBreak_toString;
+extern const QList<int> expToLvUp;
+extern const double RarityGainRate[4];
+extern const QList<QString> LimitBreak_toString;
 
 enum PMType
 {
