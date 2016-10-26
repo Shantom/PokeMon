@@ -9,6 +9,7 @@
 class PMStrength : public PokeMon
 {
 public:
+    PMStrength(){}
     PMStrength(PMRarity rarity);
     int move();
     void levelUp();

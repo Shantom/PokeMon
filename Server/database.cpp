@@ -2,7 +2,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QVariant>
-
+#include <QDebug>
+#include <QSqlError>
 Database::Database()
 {
     if(QSqlDatabase::contains("qt_sql_default_connection"))
@@ -47,4 +48,79 @@ bool Database::signup(QString username, QString password)
         return true;
     }
 
+}
+
+QStringList Database::allUsers()
+{
+    QSqlQuery query;
+    QList<QString> users;
+    query.exec(QString("SELECT username FROM users "));
+    while(query.next())
+    {
+        users.append(query.value(0).toString());
+    }
+    return users;
+
+}
+
+QList<PokeMon *> Database::pmsOfUser(QString username)
+{
+    QSqlQuery query;
+    QList<PokeMon *> monsters;
+    PokeMon *tmpPM;
+    query.exec(QString("SELECT level, type, rarity, attack, defence, maxHealth,"
+                       " speed, exp, limitbreak, name FROM monsters where owner='%1'").arg(username));
+    while(query.next())
+    {
+        PMType type=(PMType)query.value(1).toInt();
+        switch (type) {
+        case Strength:
+            tmpPM=new PMStrength();
+            break;
+        case Defense:
+            tmpPM=new PMDefense();
+            break;
+        case Shield:
+            tmpPM=new PMShield();
+            break;
+        case Agility:
+            tmpPM=new PMAgility();
+            break;
+        default:
+            break;
+        }
+        tmpPM->type=type;
+        tmpPM->rarity=(PMRarity)(int)query.value(2).toInt();
+        tmpPM->attack=query.value(3).toInt();
+        tmpPM->defence=query.value(4).toInt();
+        tmpPM->maxHealth=query.value(5).toInt();
+        tmpPM->speed=query.value(6).toInt();
+        tmpPM->exp=query.value(7).toInt();
+        tmpPM->limitBreak=(LimitBreak)(int)query.value(8).toInt();
+        tmpPM->name=query.value(9).toString();
+        tmpPM->level=query.value(0).toInt();
+
+        monsters.append(tmpPM);
+    }
+    return monsters;
+}
+
+void Database::addPokeMon(QString owner, PokeMon *pm)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO monsters (owner, level, type, rarity, attack, defence, maxHealth,"
+                  " speed, exp, limitbreak, name) values (?,?,?,?,?,?,?,?,?,?,?)");
+    query.addBindValue(QVariant(owner));
+    query.addBindValue(QVariant(pm->level));
+    query.addBindValue(QVariant((int)pm->type));
+    query.addBindValue(QVariant((int)pm->rarity));
+    query.addBindValue(QVariant(pm->attack));
+    query.addBindValue(QVariant(pm->defence));
+    query.addBindValue(QVariant(pm->maxHealth));
+    query.addBindValue(QVariant(pm->speed));
+    query.addBindValue(QVariant(pm->exp));
+    query.addBindValue(QVariant((int)pm->limitBreak));
+    query.addBindValue(QVariant(pm->name));
+    query.exec();
+    qDebug()<<query.lastError().text();
 }

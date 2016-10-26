@@ -6,144 +6,208 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>596</width>
-    <height>364</height>
+    <width>921</width>
+    <height>551</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QComboBox" name="comboBox_Type_1">
-          <item>
-           <property name="text">
-            <string>Strength</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Defense</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Shield</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Agility</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox_Rarity_1">
-          <item>
-           <property name="text">
-            <string>Common</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Rare</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Epic</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Legendary</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Create_1">
-          <property name="text">
-           <string>Create</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelPM_1">
+       <widget class="QTableWidget" name="tableWidget_users">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
+        <column>
+         <property name="text">
+          <string>UserName</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>IP Address</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Port</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QPushButton" name="pushButton_Attack_1">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QComboBox" name="comboBox_Type_1">
+            <item>
+             <property name="text">
+              <string>Strength</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Defense</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Shield</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Agility</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_Rarity_1">
+            <item>
+             <property name="text">
+              <string>Common</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Rare</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Epic</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Legendary</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_Create_1">
+            <property name="text">
+             <string>Create</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelPM_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>Attack</string>
+           <string>TextLabel</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_LvUp_1">
-          <property name="text">
-           <string>LvUp</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="pushButton_Attack_1">
+            <property name="text">
+             <string>Attack</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_LvUp_1">
+            <property name="text">
+             <string>LvUp</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_LvMax_1">
+            <property name="text">
+             <string>LvMax</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_LvMax_1">
+         <widget class="QLabel" name="label_moveInfo_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>LvMax</string>
+           <string>TextLabel</string>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_moveInfo_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </item>
-    <item row="0" column="0">
-     <widget class="QTableWidget" name="tableWidget_users">
+    <item>
+     <widget class="QTableWidget" name="tableWidget_monsters">
       <column>
        <property name="text">
-        <string>IP Address</string>
+        <string>Name</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>UserName</string>
+        <string>Level</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Port</string>
+        <string>Type</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Attack</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Defence</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>MaxHealth</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Speed</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Exp</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Limitbreak</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Rarity</string>
        </property>
       </column>
      </widget>

@@ -9,6 +9,7 @@
 class PMAgility : public PokeMon
 {
 public:
+    PMAgility(){}
     PMAgility(PMRarity rarity);
     int move();
     void levelUp();

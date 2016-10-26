@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTableWidgetItem>
+#include <QMessageBox>
 #include "pokemon.h"
 #include "pmstrength.h"
 #include "pmagility.h"
@@ -30,12 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_Rarity_1->setCurrentIndex(0);
     ui->comboBox_Type_1->setCurrentIndex(0);
 
-    //每次选中整行
-    ui->tableWidget_users->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //为方便删除按钮操作，把选中模式设为单选，即每次只选中一行，而不能选中多行
-    ui->tableWidget_users->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tableWidget_users->setSortingEnabled(true);
-    ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
+    initUsersTable();
+    initMonsTable();
 
 }
 
@@ -44,30 +41,120 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onLogin(QHostAddress senderAddr, quint16 port, QString name)
+void MainWindow::initUsersTable()
 {
-    int nOldRowCount = ui->tableWidget_users->rowCount();
-    ui->tableWidget_users->insertRow(nOldRowCount);
-
-    ui->tableWidget_users->setSortingEnabled(false);
-
-    QTableWidgetItem *ipAddr = new QTableWidgetItem
-            (QHostAddress(senderAddr.toIPv4Address()).toString());
-    ipAddr->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-    ui->tableWidget_users->setItem(nOldRowCount, 0, ipAddr);
-    QTableWidgetItem *userName = new QTableWidgetItem(name);
-    userName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-    ui->tableWidget_users->setItem(nOldRowCount, 1, userName);
-    QTableWidgetItem *userPort = new QTableWidgetItem(QString("%1").arg(port));
-    userPort->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-    ui->tableWidget_users->setItem(nOldRowCount, 2, userPort);
-
+    //每次选中整行
+    ui->tableWidget_users->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //把选中模式设为单选，即每次只选中一行，而不能选中多行
+    ui->tableWidget_users->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableWidget_users->setSortingEnabled(true);
     ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
     ui->tableWidget_users->horizontalHeader()->setStretchLastSection(true);
 
-    ui->tableWidget_users->setCurrentItem(ipAddr);
-    ui->tableWidget_users->scrollToItem(ipAddr);
+    int nOldRowCount = ui->tableWidget_users->rowCount();
+    ui->tableWidget_users->setSortingEnabled(false);
+
+    QStringList allUsers=database->allUsers();
+    for(QString& user:allUsers)
+    {
+        ui->tableWidget_users->insertRow(nOldRowCount);
+        QTableWidgetItem *userName = new QTableWidgetItem(user);
+        userName->setForeground(QBrush(QColor("gray")));
+        ui->tableWidget_users->setItem(nOldRowCount, 0, userName);
+        QTableWidgetItem *ipAddr = new QTableWidgetItem("-");
+        ipAddr->setForeground(QBrush(QColor("gray")));
+        ui->tableWidget_users->setItem(nOldRowCount, 1, ipAddr);
+        QTableWidgetItem *userPort = new QTableWidgetItem("-");
+        userPort->setForeground(QBrush(QColor("gray")));
+        ui->tableWidget_users->setItem(nOldRowCount, 2, userPort);
+    }
+    ui->tableWidget_users->setSortingEnabled(true);
+    ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
+}
+
+void MainWindow::initMonsTable()
+{
+    //每次选中整行
+    ui->tableWidget_monsters->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //把选中模式设为单选，即每次只选中一行，而不能选中多行
+    ui->tableWidget_monsters->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableWidget_monsters->setSortingEnabled(true);
+    ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
+    ui->tableWidget_monsters->setColumnWidth(1,60);
+    ui->tableWidget_monsters->setColumnWidth(3,80);
+    ui->tableWidget_monsters->setColumnWidth(4,80);
+    ui->tableWidget_monsters->setColumnWidth(5,80);
+    ui->tableWidget_monsters->setColumnWidth(6,80);
+    ui->tableWidget_monsters->setColumnWidth(7,80);
+    ui->tableWidget_monsters->horizontalHeader()->setStretchLastSection(true);
+
+}
+
+PokeMon *MainWindow::getRandomPM()
+{
+    PokeMon *newPM;
+    int roll_r=qrand()%100;
+    PMRarity rarity;
+    if(roll_r>90)
+        rarity=Legendary;
+    else if(roll_r>70)
+        rarity=Epic;
+    else if(roll_r>40)
+        rarity=Rare;
+    else
+        rarity=Common;
+
+    PMType type=(PMType)(roll_r%4);
+    switch (type) {
+    case Strength:
+        newPM=new PMStrength(rarity);
+        break;
+    case Defense:
+        newPM=new PMDefense(rarity);
+        break;
+    case Shield:
+        newPM=new PMShield(rarity);
+        break;
+    case Agility:
+        newPM=new PMAgility(rarity);
+        break;
+    default:
+        break;
+    }
+    return newPM;
+
+}
+
+void MainWindow::onLogin(QHostAddress senderAddr, quint16 port, QString name)
+{
+
+    QList<QTableWidgetItem*>itemsMatched=
+            ui->tableWidget_users->findItems(name,Qt::MatchExactly);
+    if(!itemsMatched.isEmpty())
+    {
+        int loginRow = ui->tableWidget_users->row(itemsMatched[0]);
+
+        QTableWidgetItem *userName = ui->tableWidget_users->item(loginRow,0);
+        userName->setForeground(QBrush(QColor("white")));
+
+        QTableWidgetItem *ipAddr = ui->tableWidget_users->item(loginRow,1);
+        ipAddr->setText(QHostAddress(senderAddr.toIPv4Address()).toString());
+        ipAddr->setForeground(QBrush(QColor("white")));
+
+        QTableWidgetItem *userPort = ui->tableWidget_users->item(loginRow,2);
+        userPort->setText(QString("%1").arg(port));
+        userPort->setForeground(QBrush(QColor("white")));
+
+        ui->tableWidget_users->setSortingEnabled(true);
+        ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
+
+        ui->tableWidget_users->setCurrentItem(ipAddr);
+        ui->tableWidget_users->scrollToItem(ipAddr);
+    }
+    else
+    {
+        QMessageBox::critical(this,"error","can't find user "+name);
+    }
 
 }
 
@@ -77,7 +164,48 @@ void MainWindow::onLogout(QString name)
             ui->tableWidget_users->findItems(name,Qt::MatchExactly);
     if(!itemsMatched.isEmpty())
     {
-        ui->tableWidget_users->removeRow(ui->tableWidget_users->row(itemsMatched[0]));
+        int logoutRow = ui->tableWidget_users->row(itemsMatched[0]);
+        QTableWidgetItem *userName = ui->tableWidget_users->item(logoutRow,0);
+        userName->setForeground(QBrush(QColor("gray")));
+
+        QTableWidgetItem *ipAddr = ui->tableWidget_users->item(logoutRow,1);
+        ipAddr->setText("-");
+        ipAddr->setForeground(QBrush(QColor("gray")));
+
+        QTableWidgetItem *userPort = ui->tableWidget_users->item(logoutRow,2);
+        userPort->setText("-");
+        userPort->setForeground(QBrush(QColor("gray")));
+    }
+}
+
+void MainWindow::onSignup(QString name)
+{
+    ui->tableWidget_users->setSortingEnabled(false);
+
+    int nOldRowCount = ui->tableWidget_users->rowCount();
+    ui->tableWidget_users->insertRow(nOldRowCount);
+    QTableWidgetItem *userName = new QTableWidgetItem(name);
+    userName->setForeground(QBrush(QColor("gray")));
+    ui->tableWidget_users->setItem(nOldRowCount, 0, userName);
+    QTableWidgetItem *ipAddr = new QTableWidgetItem("-");
+    ipAddr->setForeground(QBrush(QColor("gray")));
+    ui->tableWidget_users->setItem(nOldRowCount, 1, ipAddr);
+    QTableWidgetItem *userPort = new QTableWidgetItem("-");
+    userPort->setForeground(QBrush(QColor("gray")));
+    ui->tableWidget_users->setItem(nOldRowCount, 2, userPort);
+
+    ui->tableWidget_users->setSortingEnabled(true);
+    ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
+
+    /*send every online users a datagram to tell them someone has just signed up*/
+
+    /*randomly create 3 PM to a new user*/
+    for(int i=0;i<3;i++)
+    {
+        qsrand(QTime::currentTime().msec()+i*i);
+        PokeMon *newPM=getRandomPM();
+        newPM->setName(name+QString("_%1").arg(i));
+        database->addPokeMon(name,newPM);
     }
 }
 
@@ -135,7 +263,10 @@ void MainWindow::on_readyread()
         qDebug()<<port<<name<<word;
         bool isOk=database->signup(name,word);
         if(isOk)
+        {
             msg="Yes";
+            onSignup(name);
+        }
         else
             msg="whatever";
         outStream<<msg;
@@ -153,8 +284,6 @@ void MainWindow::on_readyread()
     }
 
 }
-
-
 
 void MainWindow::on_pushButton_Attack_1_clicked()
 {
@@ -217,3 +346,66 @@ void MainWindow::on_pushButton_LvUp_1_clicked()
     ui->labelPM_1->setText(info_A);
 }
 
+void MainWindow::on_tableWidget_users_currentCellChanged(int currentRow, int currentColumn,
+                                                         int previousRow, int previousColumn)
+{
+    ui->tableWidget_monsters->setSortingEnabled(false);
+    int rowCount=ui->tableWidget_monsters->rowCount();
+    for(int i=0;i<rowCount;++i)
+    {
+        ui->tableWidget_monsters->removeRow(0);
+    }
+
+
+    QString currentName=ui->tableWidget_users->item(currentRow,0)->text();
+
+    qDebug()<<currentName<<currentRow;
+    QList<PokeMon *> pmList=database->pmsOfUser(currentName);
+    for (auto pm:pmList)
+    {
+        int nOldRowCount = ui->tableWidget_monsters->rowCount();
+        ui->tableWidget_monsters->insertRow(nOldRowCount);
+        QTableWidgetItem *name = new QTableWidgetItem(pm->name);
+        QTableWidgetItem *level = new QTableWidgetItem(QString::number(pm->level));
+        QTableWidgetItem *type = new QTableWidgetItem(PMType_toString[pm->type]);
+        QTableWidgetItem *attack = new QTableWidgetItem(QString::number(pm->attack));
+        QTableWidgetItem *defence = new QTableWidgetItem(QString::number(pm->defence));
+        QTableWidgetItem *maxHealth = new QTableWidgetItem(QString::number(pm->maxHealth));
+        QTableWidgetItem *speed = new QTableWidgetItem(QString::number(pm->speed));
+        QTableWidgetItem *exp = new QTableWidgetItem(QString::number(pm->exp));
+        QTableWidgetItem *limitBreak = new QTableWidgetItem(LimitBreak_toString[pm->limitBreak]);
+        QTableWidgetItem *rarity = new QTableWidgetItem(PMRarity_toString[pm->rarity]);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 0, name);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 1, level);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 2, type);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 3, attack);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 4, defence);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 5, maxHealth);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 6, speed);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 7, exp);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 8, limitBreak);
+        ui->tableWidget_monsters->setItem(nOldRowCount, 9, rarity);
+        switch (pm->rarity) {
+        case Common:
+            rarity->setForeground(QBrush(QColor("gray")));
+            break;
+        case Rare:
+            rarity->setForeground(QBrush(QColor("skyblue")));
+            break;
+        case Epic:
+            rarity->setForeground(QBrush(QColor("purple")));
+            break;
+        case Legendary:
+            rarity->setForeground(QBrush(QColor("gold")));
+            break;
+        default:
+            break;
+        }
+
+        ui->tableWidget_monsters->setSortingEnabled(true);
+        ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
+
+        delete pm;
+    }
+
+}

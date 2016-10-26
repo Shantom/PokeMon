@@ -103,3 +103,8 @@ QString PokeMon::getInfomation()
     info+=tr("\nLimitBreak: %1").arg(LimitBreak_toString[limitBreak]);
     return info;
 }
+
+void PokeMon::setName(QString newName)
+{
+    name=newName;
+}

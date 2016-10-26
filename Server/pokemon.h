@@ -26,6 +26,8 @@ const double SpeedGain=60;
 const int ordAttack=100;
 extern QList<int> expToLvUp;
 extern double RarityGainRate[4];
+extern const char* PMType_toString[];
+extern const char* PMRarity_toString[];
 extern QList<QString> LimitBreak_toString;
 
 enum PMType
@@ -40,14 +42,14 @@ enum PMRarity
 
 enum LimitBreak
 {
-    FireSpin,//火焰漩涡120%，灼烧
-    TakeDown,//猛撞180.，反噬
-    WaterPulse,//水波动，混乱
-    PoisonJab,//毒刺，毒
-    LeechLife,//吸血
-    Aromatherapy,//芳香治疗,回血,去除异常
-    AirCutter,//破空斩,暴击
-    FurySwipes//疯狂乱抓,连续攻击2～5次,
+    FireSpin,//火焰漩涡120%，灼烧/0
+    TakeDown,//猛撞180.，反噬/1
+    WaterPulse,//水波动，混乱/2
+    PoisonJab,//毒刺，毒/3
+    LeechLife,//吸血/4
+    Aromatherapy,//芳香治疗,回血,去除异常/5
+    AirCutter,//破空斩,暴击/6
+    FurySwipes//疯狂乱抓,连续攻击2～5次,/7
     //1⁄6的几率攻击5或4次，1⁄3的几率攻击3或2次，数学期望是3.168次
 };
 
@@ -64,7 +66,7 @@ public:
     virtual int move() = 0;
     void rename(QString newName);
     virtual QString getInfomation();
-
+    void setName(QString newName);
 //private:
     PMType type;
     PMRarity rarity;

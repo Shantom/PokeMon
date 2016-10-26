@@ -28,15 +28,19 @@ public:
     Database * database;
 
 private:
-    PokeMon *A;
-    quint16 serverPort=13400;
-    QList<quint16> clientPorts;
+    void initUsersTable();
+
+    void initMonsTable();
+
+    PokeMon *getRandomPM();
 
 private slots:
 
     void onLogin(QHostAddress senderAddr, quint16 port, QString name);
 
     void onLogout(QString name);
+
+    void onSignup(QString name);
 
     void on_readyread();
 
@@ -49,8 +53,13 @@ private slots:
     void on_pushButton_Create_1_clicked();
 
 
+    void on_tableWidget_users_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+
 private:
     Ui::MainWindow *ui;
+    PokeMon *A;
+    quint16 serverPort=13400;
+    QList<quint16> clientPorts;
 
 };
 
