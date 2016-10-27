@@ -7,11 +7,13 @@
 #include "database.h"
 
 enum datagramType{
-    LOGIN,SIGNUP,EXIT
+    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS
 };
 
 QDataStream & operator>> (QDataStream &in, datagramType & type );
 QDataStream & operator<< (QDataStream &out, const datagramType type );
+QDataStream & operator>> (QDataStream &in, PokeMon * &pm );
+QDataStream & operator<< (QDataStream &out, const PokeMon* pm );
 
 namespace Ui {
 class MainWindow;
@@ -42,7 +44,11 @@ private slots:
 
     void onSignup(QString name);
 
-    void on_readyread();
+    void on_readyRead();
+
+    void on_getSelfMons(QString name);
+
+    void on_getUsers(quint16 port, QHostAddress &senderAddr);
 
     void on_pushButton_LvUp_1_clicked();
 

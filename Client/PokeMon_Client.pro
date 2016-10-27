@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     pmagility.cpp \
     pmshield.cpp \
     pmdefense.cpp \
-    logindialog.cpp
+    logindialog.cpp \
+    users.cpp
 
 HEADERS  += mainwindow.h \
     pokemon.h \
@@ -27,7 +28,9 @@ HEADERS  += mainwindow.h \
     pmagility.h \
     pmshield.h \
     pmdefense.h \
-    logindialog.h
+    logindialog.h \
+    users.h
 
 FORMS    += mainwindow.ui \
-    logindialog.ui
+    logindialog.ui \
+    users.ui

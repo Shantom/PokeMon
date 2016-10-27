@@ -9,6 +9,7 @@
 class PMShield : public PokeMon
 {
 public:
+    PMShield(){}
     PMShield(PMRarity rarity);
     int move();
     void levelUp();

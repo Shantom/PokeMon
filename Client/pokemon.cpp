@@ -93,7 +93,8 @@ void PokeMon::rename(QString newName)
 QString PokeMon::getInfomation()
 {
     QString info;
-    info+=tr("Type: %1").arg(PMType_toString[type]);
+    info+=tr("Name: %1").arg(name);
+    info+=tr("\nType: %1").arg(PMType_toString[type]);
     info+=tr("\nRarity: %1").arg(PMRarity_toString[rarity]);
     info+=tr("\nLevel: %1").arg(level);
     info+=tr("\nAttack: %1").arg((int)attack);

@@ -26,6 +26,8 @@ const double SpeedGain=60;
 const int ordAttack=100;
 extern const QList<int> expToLvUp;
 extern const double RarityGainRate[4];
+extern const char* PMType_toString[];
+extern const char* PMRarity_toString[];
 extern const QList<QString> LimitBreak_toString;
 
 enum PMType
@@ -70,8 +72,8 @@ public:
     PMRarity rarity;
     LimitBreak limitBreak;
     QString name;
-    double level;
-    double exp;
+    int level;
+    int exp;
     double attack;
     double defence;
     double maxHealth;

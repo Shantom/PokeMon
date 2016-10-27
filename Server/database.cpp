@@ -91,10 +91,10 @@ QList<PokeMon *> Database::pmsOfUser(QString username)
         }
         tmpPM->type=type;
         tmpPM->rarity=(PMRarity)(int)query.value(2).toInt();
-        tmpPM->attack=query.value(3).toInt();
-        tmpPM->defence=query.value(4).toInt();
-        tmpPM->maxHealth=query.value(5).toInt();
-        tmpPM->speed=query.value(6).toInt();
+        tmpPM->attack=query.value(3).toDouble();
+        tmpPM->defence=query.value(4).toDouble();
+        tmpPM->maxHealth=query.value(5).toDouble();
+        tmpPM->speed=query.value(6).toDouble();
         tmpPM->exp=query.value(7).toInt();
         tmpPM->limitBreak=(LimitBreak)(int)query.value(8).toInt();
         tmpPM->name=query.value(9).toString();

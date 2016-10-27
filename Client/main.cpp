@@ -1,24 +1,22 @@
 #include "mainwindow.h"
 #include "logindialog.h"
+#include "users.h"
 #include <QApplication>
 #include "pokemon.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QString username;
-    quint16 port;
-    MainWindow w;
-    w.setWindowTitle("Client");
     LoginDialog login;
+    MainWindow *w;
     if(login.exec()==QDialog::Accepted)
     {
-        w.setName(login.getName());
-        w.setPort(login.getPort());
-
-        w.show();
+        w=new MainWindow(login.getName(),login.getPort());
+        Users users;
+        w->setWindowTitle("Client");
+        QWidget::connect(w,SIGNAL(openUsers()),&users,SLOT(on_OpenUsers()));
+        w->show();
         return a.exec();
-
     }
     else
         return 0;

@@ -72,8 +72,8 @@ public:
     PMRarity rarity;
     LimitBreak limitBreak;
     QString name;
-    double level;
-    double exp;
+    int level;
+    int exp;
     double attack;
     double defence;
     double maxHealth;

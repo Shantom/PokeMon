@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     server=new QUdpSocket(this);
-    connect(server,SIGNAL(readyRead()),this,SLOT(on_readyread()));
+    connect(server,&QIODevice::readyRead,this,&MainWindow::on_readyRead);
     server->bind(serverPort);
 
     qsrand(QTime::currentTime().msec());
@@ -223,7 +223,7 @@ QDataStream &operator<<(QDataStream &out, const datagramType type)
     return out;
 }
 
-void MainWindow::on_readyread()
+void MainWindow::on_readyRead()
 {
     QByteArray datagram;//received datagram
     datagram.resize(server->pendingDatagramSize());
@@ -239,12 +239,11 @@ void MainWindow::on_readyread()
     QByteArray msgba;//message to send
     QDataStream outStream(&msgba,QIODevice::ReadWrite);
 
-    qDebug()<<type<<senderAddr;
     switch (type) {
     case LOGIN:
     {
         inStream>>port>>name>>word;
-        qDebug()<<port<<name<<word;
+        qDebug()<<port<<name<<word<<"login";
         bool isOk=database->login(name,word);
         if(isOk)
         {
@@ -260,7 +259,7 @@ void MainWindow::on_readyread()
     case SIGNUP:
     {
         inStream>>port>>name>>word;
-        qDebug()<<port<<name<<word;
+        qDebug()<<port<<name<<word<<"signup";
         bool isOk=database->signup(name,word);
         if(isOk)
         {
@@ -276,12 +275,70 @@ void MainWindow::on_readyread()
     case EXIT:
     {
         inStream>>name;
-        qDebug()<<name;
+        qDebug()<<name<<"logout";
         onLogout(name);
+    }
+        break;
+    case GETSELFMONS:
+    {
+        inStream>>name;
+        qDebug()<<name<<"GETSELFMONS";
+        on_getSelfMons(name);
+    }
+        break;
+    case GETUSERS:
+    {
+        inStream>>port;
+        qDebug()<<port<<"GETUSERS";
+        on_getUsers(port,senderAddr);
     }
     default:
         break;
     }
+
+}
+
+void MainWindow::on_getSelfMons(QString name)
+{
+    QByteArray msgba;//message to send
+    QDataStream outStream(&msgba,QIODevice::ReadWrite);
+
+    datagramType type=GETSELFMONS;//type of this datagram
+    outStream<<type;
+    QList<QTableWidgetItem*>itemsMatched=
+            ui->tableWidget_users->findItems(name,Qt::MatchExactly);
+    if(!itemsMatched.isEmpty())
+    {
+        int row=itemsMatched[0]->row();
+        int port=ui->tableWidget_users->item(row,2)->text().toInt();
+        QHostAddress senderAddr(ui->tableWidget_users->item(row,1)->text());
+        QList<PokeMon *> allPM=database->pmsOfUser(name);
+        outStream<<allPM.length();
+        for(PokeMon * pm:allPM)
+        {
+            outStream<<pm;
+            delete pm;
+        }
+        server->writeDatagram(msgba,senderAddr,port);
+    }
+}
+
+void MainWindow::on_getUsers(quint16 port,QHostAddress &senderAddr)
+{
+    QByteArray msgba;//message to send
+    QDataStream outStream(&msgba,QIODevice::ReadWrite);
+
+    datagramType type=GETUSERS;//type of this datagram
+    outStream<<type;
+    int nCountRow=ui->tableWidget_users->rowCount();
+    outStream<<nCountRow;
+    for(int i=0;i<nCountRow;i++)
+    {
+        QTableWidgetItem *user=ui->tableWidget_users->item(i,0);
+        outStream<<*user;
+    }
+    server->writeDatagram(msgba,senderAddr,port);
+    qDebug()<<senderAddr<<port;
 
 }
 
@@ -359,7 +416,6 @@ void MainWindow::on_tableWidget_users_currentCellChanged(int currentRow, int cur
 
     QString currentName=ui->tableWidget_users->item(currentRow,0)->text();
 
-    qDebug()<<currentName<<currentRow;
     QList<PokeMon *> pmList=database->pmsOfUser(currentName);
     for (auto pm:pmList)
     {
@@ -408,4 +464,40 @@ void MainWindow::on_tableWidget_users_currentCellChanged(int currentRow, int cur
         delete pm;
     }
 
+}
+
+QDataStream &operator>>(QDataStream &in, PokeMon *&pm)
+{
+    int type;
+    in>>type;
+    switch (type) {
+    case Strength:
+        pm=new PMStrength();
+        break;
+    case Defense:
+        pm=new PMDefense();
+        break;
+    case Shield:
+        pm=new PMShield();
+        break;
+    case Agility:
+        pm=new PMAgility();
+        break;
+    default:
+        break;
+    }
+    pm->type=(PMType)type;
+    in>>pm->name>>pm->level>>pm->attack>>pm->defence>>pm->maxHealth>>pm->speed>>pm->exp;
+    int rarity,limitBreak;
+    in>>rarity>>limitBreak;
+    pm->rarity=(PMRarity)rarity;
+    pm->limitBreak=(LimitBreak)limitBreak;
+    return in;
+}
+
+QDataStream &operator<<(QDataStream &out, const PokeMon *pm)
+{
+    out<<(int)pm->type<<pm->name<<pm->level<<pm->attack<<pm->defence<<pm->maxHealth
+      <<pm->speed<<pm->exp<<(int)pm->rarity<<(int)pm->limitBreak;
+    return out;
 }

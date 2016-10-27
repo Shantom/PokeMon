@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>682</width>
+    <width>742</width>
     <height>340</height>
    </rect>
   </property>
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="tableWidget_monsters">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -25,17 +25,22 @@
       </property>
       <column>
        <property name="text">
+        <string>Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Level</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>Type</string>
        </property>
       </column>
       <column>
        <property name="text">
         <string>Rarity</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Level</string>
        </property>
       </column>
      </widget>
@@ -149,6 +154,13 @@
         </property>
         <property name="text">
          <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_allUsers">
+        <property name="text">
+         <string>All Users</string>
         </property>
        </widget>
       </item>
