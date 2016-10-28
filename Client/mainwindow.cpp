@@ -18,7 +18,7 @@ MainWindow::MainWindow(QString name,quint16 port,QWidget *parent) :
     ui->setupUi(this);
 
     socket=new QUdpSocket(this);
-    qDebug()<<socket->bind(selfPort);
+    socket->bind(selfPort);
     connect(socket,&QIODevice::readyRead,this,&MainWindow::on_readyRead);
 
     qsrand(QTime::currentTime().msec());
@@ -42,6 +42,7 @@ MainWindow::~MainWindow()
     QDataStream outStream(&datagram,QIODevice::ReadWrite);
     datagramType type=EXIT;
     outStream<<type<<userName;
+    qDebug()<<"EXIT";
     socket->writeDatagram(datagram,serverAddress,serverPort);
 
 }
@@ -74,6 +75,7 @@ void MainWindow::on_readyRead()
     inStream>>type;
     switch (type) {
     case GETSELFMONS:
+        qDebug()<<"GETSELFMONS_";
         on_getSelfMons(inStream);
         break;
     default:
@@ -137,6 +139,10 @@ void MainWindow::refreshMonsTable()
         default:
             break;
         }
+        name->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        level->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        type->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        rarity->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
         ui->tableWidget_monsters->setColumnWidth(1,60);
         ui->tableWidget_monsters->setColumnWidth(2,80);

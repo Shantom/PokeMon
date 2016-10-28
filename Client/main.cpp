@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
         w=new MainWindow(login.getName(),login.getPort());
         Users users;
         w->setWindowTitle("Client");
+        w->setAttribute(Qt::WA_DeleteOnClose);
+        users.setWindowTitle("Users");
         QWidget::connect(w,SIGNAL(openUsers()),&users,SLOT(on_OpenUsers()));
         w->show();
         return a.exec();

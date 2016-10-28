@@ -7,7 +7,7 @@
 #include "database.h"
 
 enum datagramType{
-    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS
+    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS,GETCERTAINMONS
 };
 
 QDataStream & operator>> (QDataStream &in, datagramType & type );
@@ -49,6 +49,8 @@ private slots:
     void on_getSelfMons(QString name);
 
     void on_getUsers(quint16 port, QHostAddress &senderAddr);
+
+    void on_getCertainMons(quint16 port, QString name, QHostAddress &senderAddr);
 
     void on_pushButton_LvUp_1_clicked();
 

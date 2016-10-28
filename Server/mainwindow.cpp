@@ -67,6 +67,9 @@ void MainWindow::initUsersTable()
         QTableWidgetItem *userPort = new QTableWidgetItem("-");
         userPort->setForeground(QBrush(QColor("gray")));
         ui->tableWidget_users->setItem(nOldRowCount, 2, userPort);
+        userName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        ipAddr->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        userPort->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
     }
     ui->tableWidget_users->setSortingEnabled(true);
     ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
@@ -194,6 +197,10 @@ void MainWindow::onSignup(QString name)
     userPort->setForeground(QBrush(QColor("gray")));
     ui->tableWidget_users->setItem(nOldRowCount, 2, userPort);
 
+    userName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+    ipAddr->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+    userPort->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
     ui->tableWidget_users->setSortingEnabled(true);
     ui->tableWidget_users->sortByColumn(0, Qt::AscendingOrder);
 
@@ -292,6 +299,14 @@ void MainWindow::on_readyRead()
         qDebug()<<port<<"GETUSERS";
         on_getUsers(port,senderAddr);
     }
+        break;
+    case GETCERTAINMONS:
+    {
+        inStream>>port>>name;
+        qDebug()<<port<<name<<"GETCERTAINMONS";
+        on_getCertainMons(port,name,senderAddr);
+    }
+        break;
     default:
         break;
     }
@@ -338,8 +353,24 @@ void MainWindow::on_getUsers(quint16 port,QHostAddress &senderAddr)
         outStream<<*user;
     }
     server->writeDatagram(msgba,senderAddr,port);
-    qDebug()<<senderAddr<<port;
+}
 
+void MainWindow::on_getCertainMons(quint16 port, QString name, QHostAddress &senderAddr)
+{
+    QByteArray msgba;//message to send
+    QDataStream outStream(&msgba,QIODevice::ReadWrite);
+
+    datagramType type=GETCERTAINMONS;//type of this datagram
+    outStream<<type;
+    auto allPM=database->pmsOfUser(name);
+    outStream<<allPM.length();
+    for(auto pm:allPM)
+    {
+        outStream<<pm;
+        delete pm;
+    }
+
+    server->writeDatagram(msgba,senderAddr,port);
 }
 
 void MainWindow::on_pushButton_Attack_1_clicked()
@@ -441,6 +472,16 @@ void MainWindow::on_tableWidget_users_currentCellChanged(int currentRow, int cur
         ui->tableWidget_monsters->setItem(nOldRowCount, 7, exp);
         ui->tableWidget_monsters->setItem(nOldRowCount, 8, limitBreak);
         ui->tableWidget_monsters->setItem(nOldRowCount, 9, rarity);
+        name->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        level->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        type->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        attack->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        defence->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        maxHealth->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        speed->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        exp->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        limitBreak->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        rarity->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         switch (pm->rarity) {
         case Common:
             rarity->setForeground(QBrush(QColor("gray")));
@@ -457,12 +498,11 @@ void MainWindow::on_tableWidget_users_currentCellChanged(int currentRow, int cur
         default:
             break;
         }
-
-        ui->tableWidget_monsters->setSortingEnabled(true);
-        ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
-
         delete pm;
     }
+
+    ui->tableWidget_monsters->setSortingEnabled(true);
+    ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
 
 }
 

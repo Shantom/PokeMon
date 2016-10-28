@@ -93,8 +93,8 @@ void LoginDialog::on_pushButton_login_clicked()
             {
                 QMessageBox::warning(this,tr("成功"),tr("注册成功!\n请重新登录"),QMessageBox::Yes);
                 on_pushButton_signup_clicked();
-                ui->lineEdit_username->clear();
                 ui->lineEdit_password->clear();
+                ui->label_password->setFocus();
             }
         }
         else//server rejects
