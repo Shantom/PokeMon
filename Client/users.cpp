@@ -74,7 +74,7 @@ void Users::on_getUsers(QDataStream &inStream)
     for (int i=0;i<nCount;i++)
     {
         QTableWidgetItem *user=new QTableWidgetItem;
-        inStream>>*user;//not sure it is of this form?
+        inStream>>*user;
         users.append(user);
 
         int nOldRowCount = ui->tableWidget_users->rowCount();

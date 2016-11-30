@@ -10,8 +10,8 @@ LoginDialog::LoginDialog(QWidget *parent) :
     serverAddress("127.0.0.1")
 {
     ui->setupUi(this);
-    ui->lineEdit_username->setText("Shantom");
-    ui->lineEdit_password->setText("5589");
+    ui->lineEdit_username->setText("admin");
+    ui->lineEdit_password->setText("admin");
     ui->lineEdit_password->setEchoMode(QLineEdit::Password);
     ui->lineEdit_repeat->setEchoMode(QLineEdit::Password);
     ui->lineEdit_repeat->hide();
@@ -26,7 +26,6 @@ LoginDialog::LoginDialog(QWidget *parent) :
 LoginDialog::~LoginDialog()
 {
     delete ui;
-
 }
 
 QString LoginDialog::getName()
