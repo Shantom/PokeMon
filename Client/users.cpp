@@ -114,6 +114,7 @@ void Users::refreshTableUsers()
     QByteArray datagram;//datagram to send
     QDataStream outStream(&datagram,QIODevice::ReadWrite);
     datagramType type=GETUSERS;
+    qDebug()<<"GETUSERS";
     outStream<<type<<selfPort;
     socket->writeDatagram(datagram,serverAddress,serverPort);
 
@@ -240,6 +241,7 @@ void Users::on_pushButton_showPM_clicked()
                 QDataStream outStream(&datagram,QIODevice::ReadWrite);
                 datagramType type=GETCERTAINMONS;
                 outStream<<type<<selfPort<<name;
+                qDebug()<<"GETCERTAINMONS";
                 socket->writeDatagram(datagram,serverAddress,serverPort);
             }
         }

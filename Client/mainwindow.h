@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <pokemon.h>
 #include <QUdpSocket>
+#include "battle.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +45,8 @@ private slots:
 
     void on_pushButton_allUsers_clicked();
 
+    void on_pushButton_Battle_clicked();
+
 private:
     Ui::MainWindow *ui;
     PokeMon *A;
@@ -54,6 +57,8 @@ private:
     quint16 selfPort;
 
     QList<PokeMon *> allPM;
+
+    Battle *battle;
 
 signals:
     void openUsers();

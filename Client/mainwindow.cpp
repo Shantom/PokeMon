@@ -17,6 +17,8 @@ MainWindow::MainWindow(QString name,quint16 port,QWidget *parent) :
 {
     ui->setupUi(this);
 
+    battle=new Battle(this);
+
     socket=new QUdpSocket(this);
     socket->bind(selfPort);
     connect(socket,&QIODevice::readyRead,this,&MainWindow::on_readyRead);
@@ -269,4 +271,9 @@ void MainWindow::on_tableWidget_monsters_currentCellChanged(int currentRow, int 
 void MainWindow::on_pushButton_allUsers_clicked()
 {
     emit openUsers();
+}
+
+void MainWindow::on_pushButton_Battle_clicked()
+{
+    battle->show();
 }
