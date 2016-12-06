@@ -10,10 +10,11 @@ PMStrength::PMStrength(PMRarity rarity):PokeMon(rarity)
 
 int PMStrength::move()
 {
-    qsrand(QTime::currentTime().msec()+speed);
+    qsrand(seed++);
     int flag=qrand()%100;
-    if(flag>20){
-        return ordAttack;
+//    qDebug()<<flag;
+    if(flag>35){
+        return OrdAttack;
     }
     else {
         return limitBreak;

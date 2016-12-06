@@ -12,6 +12,8 @@ class MainWindow;
 QDataStream & operator>> (QDataStream &in, PokeMon * &pm );
 QDataStream & operator<< (QDataStream &out, const PokeMon* &pm );
 
+class Battle;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -23,9 +25,9 @@ public:
     void setPort(quint16 port){selfPort=port;}
 
 private:
-    void initMonsTable();
 
 private slots:
+    void initMonsTable();
 
     void on_readyRead();
 
@@ -62,6 +64,7 @@ private:
 
 signals:
     void openUsers();
+    void sendPM(PokeMon *self);
 
 };
 

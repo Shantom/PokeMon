@@ -9,7 +9,8 @@ class LoginDialog;
 }
 
 enum datagramType{
-    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS,GETCERTAINMONS
+    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS,GETCERTAINMONS,
+    GETOPPONENT,SENDRESULT,KILLPM,GETTROPHY
 };
 
 QDataStream & operator>> (QDataStream &in, datagramType & type );

@@ -3,10 +3,12 @@
 
 #include <QMainWindow>
 #include <QObject>
+#include <QDebug>
 #include <QWidget>
 #include <vector>
 #include <QTime>
 #include <QList>
+
 //using namespace std;
 const double CommonRate=0.8;
 const double RareRate=1.0;
@@ -14,7 +16,7 @@ const double EpicRate=1.2;
 const double LegendaryRate=1.4;
 
 const double StrengthRate=1.3;
-const double ShieldRate=1.4;
+const double ShieldRate=1.8;
 const double DefenseRate=1.3;
 const double AgilityRate=1.3;
 
@@ -44,13 +46,14 @@ enum LimitBreak
 {
     FireSpin,//火焰漩涡120%，灼烧
     TakeDown,//猛撞180.，反噬
-    WaterPulse,//水波动，混乱
+    WaterPulse,//水波动，混乱20
     PoisonJab,//毒刺，毒
     LeechLife,//吸血
     Aromatherapy,//芳香治疗,回血,去除异常
     AirCutter,//破空斩,暴击
-    FurySwipes//疯狂乱抓,连续攻击2～5次,
+    FurySwipes,//疯狂乱抓,连续攻击2～5次,
     //1⁄6的几率攻击5或4次，1⁄3的几率攻击3或2次，数学期望是3.168次
+    OrdAttack//普通攻击
 };
 
 class PokeMon : public QObject
@@ -60,6 +63,7 @@ public:
 //    explicit PokeMon(QObject *parent = 0);
     PokeMon();
     PokeMon(PMRarity rarity);
+    PokeMon(PokeMon &src);
     ~PokeMon();
     void gainExp(int newExp);
     virtual void levelUp();
@@ -78,6 +82,9 @@ public:
     double defence;
     double maxHealth;
     double speed;
+    int id;
+
+    unsigned seed;
 signals:
 
 public slots:

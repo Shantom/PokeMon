@@ -69,7 +69,7 @@ QList<PokeMon *> Database::pmsOfUser(QString username)
     QList<PokeMon *> monsters;
     PokeMon *tmpPM;
     query.exec(QString("SELECT level, type, rarity, attack, defence, maxHealth,"
-                       " speed, exp, limitbreak, name FROM monsters where owner='%1'").arg(username));
+                       " speed, exp, limitbreak, name, id FROM monsters where owner='%1'").arg(username));
     while(query.next())
     {
         PMType type=(PMType)query.value(1).toInt();
@@ -99,6 +99,7 @@ QList<PokeMon *> Database::pmsOfUser(QString username)
         tmpPM->limitBreak=(LimitBreak)(int)query.value(8).toInt();
         tmpPM->name=query.value(9).toString();
         tmpPM->level=query.value(0).toInt();
+        tmpPM->id=query.value(10).toInt();
 
         monsters.append(tmpPM);
     }
@@ -123,4 +124,71 @@ void Database::addPokeMon(QString owner, PokeMon *pm)
     query.addBindValue(QVariant(pm->name));
     query.exec();
     qDebug()<<query.lastError().text();
+}
+
+void Database::deletePokeMon(int id)
+{
+    QSqlQuery query;
+    query.exec(QString("DELETE from monsters where id=%1").arg(id));
+
+}
+
+PokeMon *Database::pmAt(int id)
+{
+    QSqlQuery query;
+    PokeMon *tmpPM;
+    query.exec(QString("SELECT level, type, rarity, attack, defence, maxHealth,"
+                       " speed, exp, limitbreak, name, id FROM monsters where id='%1'").arg(id));
+    if(query.next())
+    {
+        PMType type=(PMType)query.value(1).toInt();
+        switch (type) {
+        case Strength:
+            tmpPM=new PMStrength();
+            break;
+        case Defense:
+            tmpPM=new PMDefense();
+            break;
+        case Shield:
+            tmpPM=new PMShield();
+            break;
+        case Agility:
+            tmpPM=new PMAgility();
+            break;
+        default:
+            break;
+        }
+        tmpPM->type=type;
+        tmpPM->rarity=(PMRarity)(int)query.value(2).toInt();
+        tmpPM->attack=query.value(3).toDouble();
+        tmpPM->defence=query.value(4).toDouble();
+        tmpPM->maxHealth=query.value(5).toDouble();
+        tmpPM->speed=query.value(6).toDouble();
+        tmpPM->exp=query.value(7).toInt();
+        tmpPM->limitBreak=(LimitBreak)(int)query.value(8).toInt();
+        tmpPM->name=query.value(9).toString();
+        tmpPM->level=query.value(0).toInt();
+        tmpPM->id=query.value(10).toInt();
+
+    }
+    return tmpPM;
+
+}
+
+void Database::updatePM(int id, PokeMon *pm)
+{
+    QSqlQuery query;
+
+    query.exec(QString("UPDATE monsters SET level=?, attack=?, defence=?,"
+                       " maxHealth=?, speed=?, exp=?, name=? where id='%1'").arg(id));
+    query.addBindValue(QVariant(pm->level));
+    query.addBindValue(QVariant(pm->attack));
+    query.addBindValue(QVariant(pm->defence));
+    query.addBindValue(QVariant(pm->maxHealth));
+    query.addBindValue(QVariant(pm->speed));
+    query.addBindValue(QVariant(pm->exp));
+    query.addBindValue(QVariant(pm->name));
+    query.exec();
+    qDebug()<<query.lastError().text();
+
 }

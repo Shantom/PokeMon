@@ -11,6 +11,7 @@ class PMDefense : public PokeMon
 public:
     PMDefense(){}
     PMDefense(PMRarity rarity);
+    PMDefense(PokeMon& src):PokeMon(src){}
     int move();
     void levelUp();
 };

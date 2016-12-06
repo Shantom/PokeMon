@@ -11,6 +11,7 @@ class PMAgility : public PokeMon
 public:
     PMAgility(){}
     PMAgility(PMRarity rarity);
+    PMAgility(PokeMon& src):PokeMon(src){}
     int move();
     void levelUp();
 };

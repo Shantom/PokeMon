@@ -78,6 +78,7 @@ public:
     double defence;
     double maxHealth;
     double speed;
+    int id;
 signals:
 
 public slots:

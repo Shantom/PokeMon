@@ -9,14 +9,14 @@ const char* PMRarity_toString[]=
 {
     "Common", "Rare", "Epic", "Legendary"
 };
-QList<int> expToLvUp={0,5,10,17,30,
-                       42,60,80,110,150,
-                       200,260,320,390,470,
-                      0x3f3f3f3f};
+QList<int> expToLvUp={0,100,300,600,1000,
+                      1500,2100,2800,3600,4500,
+                      5500,6831,8559,10756,13500,
+                     0x3f3f3f3f};
 QList<QString> LimitBreak_toString={"FireSpin", "TakeDown",
                                     "WaterPulse", "PoisonJab",
                                    "LeechLife","Aromatherapy",
-                                   "AirCutter","FurySwipes"};
+                                   "AirCutter","FurySwipes","OrdAttack"};
 
 double RarityGainRate[4]={0.8,1.0,1.2,1.4};
 

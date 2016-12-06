@@ -307,6 +307,35 @@ void MainWindow::on_readyRead()
         on_getCertainMons(port,name,senderAddr);
     }
         break;
+    case GETOPPONENT:
+    {
+        int level;
+        int tmpRarity;
+
+        inStream>>port>>name>>level>>tmpRarity;
+        qDebug()<<"GETOPPONENT";
+        on_getOpponent(port,name,level,(PMRarity)tmpRarity,senderAddr);
+        break;
+    }
+    case SENDRESULT:
+    {
+        qDebug()<<"SENDRESULT";
+        on_sendResult(inStream);
+        break;
+    }
+    case GETTROPHY:
+    {
+        qDebug()<<name<<"GETTROPHY";
+        on_getTrophy(inStream);
+        break;
+    }
+    case KILLPM:
+    {
+        qDebug()<<"KILLPM";
+        on_killPM(inStream);
+        break;
+    }
+
     default:
         break;
     }
@@ -371,6 +400,83 @@ void MainWindow::on_getCertainMons(quint16 port, QString name, QHostAddress &sen
     }
 
     server->writeDatagram(msgba,senderAddr,port);
+}
+
+void MainWindow::on_getOpponent(quint16 port, QString name, int level,PMRarity rarity, QHostAddress &senderAddr)
+{
+    QByteArray msgba;//message to send
+    QDataStream outStream(&msgba,QIODevice::ReadWrite);
+
+//    datagramType type=GETOPPONENT;//type of this datagram
+//    outStream<<type;
+
+    qsrand(QTime::currentTime().msec());
+    PMType pmType=(PMType)(qrand()%4);
+    PokeMon *opponent;
+    switch (pmType) {
+    case Strength:
+        opponent=new PMStrength(rarity);
+        break;
+    case Shield:
+        opponent=new PMShield(rarity);
+        break;
+    case Defense:
+        opponent=new PMDefense(rarity);
+        break;
+    case Agility:
+        opponent=new PMAgility(rarity);
+        break;
+    default:
+        break;
+    }
+    opponent->gainExp(expToLvUp[level-1]);
+    outStream<<opponent;
+
+
+    server->writeDatagram(msgba,senderAddr,port);
+
+}
+
+void MainWindow::on_sendResult(QDataStream &inStream)
+{
+    QString name;
+    int battleType;
+    int id;
+    bool result;
+    inStream>>name>>battleType>>id>>result;
+    if(result)
+    {
+        //胜场数+1
+
+        int exp;
+        inStream>>exp;
+        PokeMon *pm=database->pmAt(id);
+        pm->gainExp(exp);
+        database->updatePM(id,pm);
+
+    }
+    if(battleType==2)
+    {
+        ;
+    }
+
+}
+
+void MainWindow::on_getTrophy(QDataStream &inStream)
+{
+    QString name;
+    PokeMon *pm;
+    inStream>>name>>pm;
+    database->addPokeMon(name,pm);
+
+}
+
+void MainWindow::on_killPM(QDataStream &inStream)
+{
+    int id;
+    inStream>>id;
+    database->deletePokeMon(id);
+
 }
 
 void MainWindow::on_pushButton_Attack_1_clicked()
@@ -532,12 +638,13 @@ QDataStream &operator>>(QDataStream &in, PokeMon *&pm)
     in>>rarity>>limitBreak;
     pm->rarity=(PMRarity)rarity;
     pm->limitBreak=(LimitBreak)limitBreak;
+    in>>pm->id;
     return in;
 }
 
 QDataStream &operator<<(QDataStream &out, const PokeMon *pm)
 {
     out<<(int)pm->type<<pm->name<<pm->level<<pm->attack<<pm->defence<<pm->maxHealth
-      <<pm->speed<<pm->exp<<(int)pm->rarity<<(int)pm->limitBreak;
+      <<pm->speed<<pm->exp<<(int)pm->rarity<<(int)pm->limitBreak<<pm->id;
     return out;
 }

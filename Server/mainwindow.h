@@ -7,7 +7,8 @@
 #include "database.h"
 
 enum datagramType{
-    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS,GETCERTAINMONS
+    LOGIN,SIGNUP,EXIT,GETSELFMONS,GETUSERS,GETCERTAINMONS,GETOPPONENT,
+    SENDRESULT,KILLPM,GETTROPHY
 };
 
 QDataStream & operator>> (QDataStream &in, datagramType & type );
@@ -51,6 +52,15 @@ private slots:
     void on_getUsers(quint16 port, QHostAddress &senderAddr);
 
     void on_getCertainMons(quint16 port, QString name, QHostAddress &senderAddr);
+
+    void on_getOpponent(quint16 port, QString name, int level, PMRarity rarity, QHostAddress &senderAddr);
+
+    void on_sendResult(QDataStream &inStream);
+
+    void on_getTrophy(QDataStream &inStream);
+
+    void on_killPM(QDataStream &inStream);
+
 
     void on_pushButton_LvUp_1_clicked();
 

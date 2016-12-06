@@ -18,6 +18,9 @@ public:
     QStringList allUsers();
     QList<PokeMon *> pmsOfUser(QString username);
     void addPokeMon(QString owner, PokeMon * pm);
+    void deletePokeMon(int id);
+    PokeMon *pmAt(int id);
+    void updatePM(int id, PokeMon *pm);
 };
 
 #endif // DATABASE_H

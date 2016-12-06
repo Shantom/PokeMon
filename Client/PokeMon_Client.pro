@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network  testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     logindialog.cpp \
     users.cpp \
     battle.cpp \
-    fighting.cpp
+    fighting.cpp \
+    death.cpp \
+    rename.cpp
 
 HEADERS  += mainwindow.h \
     pokemon.h \
@@ -33,9 +35,13 @@ HEADERS  += mainwindow.h \
     logindialog.h \
     users.h \
     battle.h \
-    fighting.h
+    fighting.h \
+    death.h \
+    rename.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui \
     users.ui \
-    battle.ui
+    battle.ui \
+    death.ui \
+    rename.ui

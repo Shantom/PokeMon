@@ -11,10 +11,11 @@ PMAgility::PMAgility(PMRarity rarity):PokeMon(rarity)
 
 int PMAgility::move()
 {
-    qsrand(QTime::currentTime().msec()+speed);
+    qsrand(seed++);
     int flag=qrand()%100;
-    if(flag>30){
-        return ordAttack;
+//    qDebug()<<flag;
+    if(flag>45){
+        return OrdAttack;
     }
     else {
         return limitBreak;

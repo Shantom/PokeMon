@@ -9,14 +9,14 @@ const char* PMRarity_toString[]=
 {
     "Common", "Rare", "Epic", "Legendary"
 };
-const QList<int> expToLvUp={0,5,10,17,30,
-                       42,60,80,110,150,
-                       200,260,320,390,470,
+const QList<int> expToLvUp={0,100,300,600,1000,
+                       1500,2100,2800,3600,4500,
+                       5500,6831,8559,10756,13500,
                       0x3f3f3f3f};
 const QList<QString> LimitBreak_toString={"FireSpin", "TakeDown",
                                     "WaterPulse", "PoisonJab",
                                    "LeechLife","Aromatherapy",
-                                   "AirCutter","FurySwipes"};
+                                   "AirCutter","FurySwipes","OrdAttack"};
 
 const double RarityGainRate[4]={0.8,1.0,1.2,1.4};
 
@@ -68,6 +68,22 @@ PokeMon::PokeMon(PMRarity rarity)
     default:
         break;
     }
+}
+
+PokeMon::PokeMon(PokeMon &src)
+{
+    type=src.type;
+    rarity=src.rarity;
+    limitBreak=src.limitBreak;
+    name=src.name;
+    level=src.level;
+    exp=src.exp;
+    attack=src.attack;
+    defence=src.defence;
+    maxHealth=src.maxHealth;
+    speed=src.speed;
+
+    seed=qrand();
 }
 
 PokeMon::~PokeMon()
