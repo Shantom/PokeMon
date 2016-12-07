@@ -10,7 +10,7 @@ Death::Death(QList<PokeMon *> mons, QWidget *parent) :
     setWindowIcon(icon);
     this->show();
     setWindowTitle("Pick one to death!");
-    setWindowFlags(Qt::Dialog);
+    setWindowFlags(Qt::Dialog|Qt::FramelessWindowHint);
     setWindowModality(Qt::WindowModal);
     for(auto mon:mons)
     {

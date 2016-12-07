@@ -143,15 +143,9 @@ void MainWindow::refreshMonsTable()
     for(int i=0;i<nCountRow;i++)
         ui->tableWidget_monsters->removeRow(0);
 
-    int t=0;
 
     for (auto pm:allPM)
     {
-
-        if(t==5)
-            break;
-        t++;
-
         int nOldRowCount = ui->tableWidget_monsters->rowCount();
         ui->tableWidget_monsters->insertRow(nOldRowCount);
         QTableWidgetItem *name = new QTableWidgetItem(pm->name);

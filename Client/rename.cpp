@@ -7,6 +7,8 @@ Rename::Rename(QWidget *parent) :
 {
     ui->setupUi(this);
     QIcon icon(QPixmap(":/new/prefix1/image/egg.png"));
+    setWindowTitle("New PokeMon");
+    setWindowFlags(Qt::Dialog|Qt::FramelessWindowHint);
     setWindowIcon(icon);
 }
 
