@@ -35,14 +35,6 @@ private slots:
 
     void refreshMonsTable();
 
-    void on_pushButton_LvUp_1_clicked();
-
-    void on_pushButton_LvMax_1_clicked();
-
-    void on_pushButton_Attack_1_clicked();
-
-    void on_pushButton_Create_1_clicked();
-
     void on_tableWidget_monsters_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
     void on_pushButton_allUsers_clicked();

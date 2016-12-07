@@ -11,13 +11,14 @@ Battle::Battle(QString name, quint16 port, QList<PokeMon *> allPM, QWidget *pare
     ui(new Ui::Battle)
 {
     ui->setupUi(this);
+    QIcon icon(QPixmap(":/new/prefix1/image/pikachu.png"));
+    setWindowIcon(icon);
     socket=new QUdpSocket(this);
     battlePort=port+200;
     this->name=name;
     socket->bind(battlePort);
-
+    setWindowFlags(Qt::Dialog|Qt::FramelessWindowHint);
     setWindowTitle("Battle!");
-    setWindowFlags(Qt::Dialog);
     setWindowModality(Qt::WindowModal);
     hide();
     ui->tableView_chellenges->hide();
@@ -34,6 +35,10 @@ Battle::Battle(QString name, quint16 port, QList<PokeMon *> allPM, QWidget *pare
     ui->label_infoB->hide();
     ui->spinBox_level->setMaximum(15);
     ui->spinBox_level->setMinimum(1);
+    ui->pushButton_UpTour->setIcon(QIcon(":/new/prefix1/image/upgrade.png"));
+    ui->pushButton_UpTour->setIconSize(QSize(64,64));
+    ui->pushButton_DuRace->setIcon(QIcon(":/new/prefix1/image/duel.png"));
+    ui->pushButton_DuRace->setIconSize(QSize(64,64));
 }
 
 Battle::~Battle()
@@ -106,6 +111,8 @@ void Battle::on_pushButton_back_clicked()
     ui->pushButton_DuRace->show();
     ui->comboBox_rarity->show();
     ui->spinBox_level->show();
+    ui->pushButton_close->show();
+
 }
 
 void Battle::on_pushButton_UpTour_clicked()
@@ -120,7 +127,7 @@ void Battle::on_pushButton_UpTour_clicked()
     ui->pushButton_DuRace->hide();
     ui->comboBox_rarity->hide();
     ui->spinBox_level->hide();
-
+    ui->pushButton_close->hide();
 }
 
 void Battle::on_pushButton_DuRace_clicked()
@@ -135,6 +142,7 @@ void Battle::on_pushButton_DuRace_clicked()
     ui->pushButton_DuRace->hide();
     ui->comboBox_rarity->hide();
     ui->spinBox_level->hide();
+    ui->pushButton_close->hide();
 }
 
 void Battle::on_pushButton_Battle_clicked()
@@ -285,7 +293,15 @@ void Battle::on_killPM(int id)
     QByteArray datagram;//datagram to send
     QDataStream outStream(&datagram,QIODevice::ReadWrite);
     datagramType type=KILLPM;
-    outStream<<type<<id;
+    bool newRandom=false;
+    if(allPM.length()==1)
+        newRandom=true;
+    outStream<<type<<id<<name<<newRandom;
     socket->writeDatagram(datagram,serverAddress,serverPort);
 
+}
+
+void Battle::on_pushButton_close_clicked()
+{
+    close();
 }

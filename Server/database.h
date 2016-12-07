@@ -12,15 +12,29 @@ class Database
 {
 public:
     Database();
+
     QSqlDatabase db;
+
     bool login(QString username,QString password);
+
     bool signup(QString username,QString password);
+
     QStringList allUsers();
+
+    double getWinRate(QString name);
+
     QList<PokeMon *> pmsOfUser(QString username);
+
     void addPokeMon(QString owner, PokeMon * pm);
+
+    void updateWinRate(QString name, bool result);
+
     void deletePokeMon(int id);
+
     PokeMon *pmAt(int id);
+
     void updatePM(int id, PokeMon *pm);
 };
+
 
 #endif // DATABASE_H

@@ -6,6 +6,8 @@ Rename::Rename(QWidget *parent) :
     ui(new Ui::Rename)
 {
     ui->setupUi(this);
+    QIcon icon(QPixmap(":/new/prefix1/image/egg.png"));
+    setWindowIcon(icon);
 }
 
 QString Rename::value()

@@ -10,6 +10,14 @@ LoginDialog::LoginDialog(QWidget *parent) :
     serverAddress("127.0.0.1")
 {
     ui->setupUi(this);
+    QIcon icon(QPixmap(":/new/prefix1/image/pokemon_blackwhite.png"));
+    setWindowIcon(icon);
+    setWindowTitle("Login");
+    QPixmap background(":/new/prefix1/image/bg.png");
+    background=background.scaled(QSize(250,100),
+                                 Qt::KeepAspectRatioByExpanding);
+    ui->label_background->setPixmap(background);
+
     ui->lineEdit_username->setText("FlyThief");
     ui->lineEdit_password->setText("0000");
     ui->lineEdit_password->setEchoMode(QLineEdit::Password);
@@ -127,6 +135,8 @@ void LoginDialog::on_pushButton_signup_clicked()
         ui->pushButton_login->setText("确认注册");
         ui->pushButton_login->setEnabled(false);
         ui->pushButton_signup->setText("返回");
+        setWindowTitle("SignUp");
+
     }
     else
     {
@@ -137,6 +147,7 @@ void LoginDialog::on_pushButton_signup_clicked()
         ui->label_warning->setText("");
         ui->pushButton_login->setText("登录");
         ui->pushButton_signup->setText("注册");
+        setWindowTitle("Login");
     }
 }
 

@@ -379,7 +379,9 @@ void MainWindow::on_getUsers(quint16 port,QHostAddress &senderAddr)
     for(int i=0;i<nCountRow;i++)
     {
         QTableWidgetItem *user=ui->tableWidget_users->item(i,0);
-        outStream<<*user;
+        QString name=user->text();
+        double rate= database->getWinRate(name);
+        outStream<<*user<<rate;
     }
     server->writeDatagram(msgba,senderAddr,port);
 }
@@ -444,6 +446,7 @@ void MainWindow::on_sendResult(QDataStream &inStream)
     int id;
     bool result;
     inStream>>name>>battleType>>id>>result;
+    database->updateWinRate(name,result);
     if(result)
     {
         //胜场数+1
@@ -476,6 +479,15 @@ void MainWindow::on_killPM(QDataStream &inStream)
     int id;
     inStream>>id;
     database->deletePokeMon(id);
+    QString name;
+    bool newRandom;
+    inStream>>name>>newRandom;
+    if(newRandom)
+    {
+        PokeMon *newPM=getRandomPM();
+        newPM->setName(name+QString("_added"));
+        database->addPokeMon(name,newPM);
+    }
 
 }
 

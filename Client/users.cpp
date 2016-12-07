@@ -49,11 +49,12 @@ void Users::initMonsTable()
     ui->tableWidget_monsters->setSortingEnabled(true);
     ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
     ui->tableWidget_monsters->setColumnWidth(1,60);
-    ui->tableWidget_monsters->setColumnWidth(3,80);
+    ui->tableWidget_monsters->setColumnWidth(2,80);
+    ui->tableWidget_monsters->setColumnWidth(3,70);
     ui->tableWidget_monsters->setColumnWidth(4,80);
     ui->tableWidget_monsters->setColumnWidth(5,80);
     ui->tableWidget_monsters->setColumnWidth(6,80);
-    ui->tableWidget_monsters->setColumnWidth(7,80);
+    ui->tableWidget_monsters->setColumnWidth(7,55);
     ui->tableWidget_monsters->horizontalHeader()->setStretchLastSection(true);
 
 }
@@ -74,12 +75,20 @@ void Users::on_getUsers(QDataStream &inStream)
     for (int i=0;i<nCount;i++)
     {
         QTableWidgetItem *user=new QTableWidgetItem;
+        QTableWidgetItem *winRate=new QTableWidgetItem;
+
         inStream>>*user;
         users.append(user);
+
+        double rate;
+        inStream>>rate;
+        winRate->setText(QString("%1").arg(rate,0,'g',2));
+
 
         int nOldRowCount = ui->tableWidget_users->rowCount();
         ui->tableWidget_users->insertRow(nOldRowCount);
         ui->tableWidget_users->setItem(nOldRowCount, 0, user);
+        ui->tableWidget_users->setItem(nOldRowCount, 1, winRate);
         user->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
     }

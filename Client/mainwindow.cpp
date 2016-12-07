@@ -17,6 +17,10 @@ MainWindow::MainWindow(QString name,quint16 port,QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QIcon icon(QPixmap(":/new/prefix1/image/pokemon_colored.png"));
+    setWindowIcon(icon);
+
+
     battle=new Battle(name,port,allPM,this);
     connect(battle,SIGNAL(initMonsTable()),this,SLOT(initMonsTable()));
     connect(this,SIGNAL(sendPM(PokeMon*)),battle,SLOT(recvPM(PokeMon*)));
@@ -32,8 +36,6 @@ MainWindow::MainWindow(QString name,quint16 port,QWidget *parent) :
 
 
     ui->labelPM_1->setText(info_A);
-    ui->comboBox_Rarity_1->setCurrentIndex(0);
-    ui->comboBox_Type_1->setCurrentIndex(0);
 
     ui->pushButton_Battle->setDisabled(true);
 
@@ -99,13 +101,36 @@ void MainWindow::on_getSelfMons(QDataStream &inStream)
     for(auto pm :allPM)
         delete pm;
 
+    int advanceNum=0;
+
     allPM.clear();
     for(int i=0; i<nCount; i++)
     {
         PokeMon *tmpPM;
         inStream>>tmpPM;
         allPM.append(tmpPM);
+        if(tmpPM->level==15)
+            advanceNum++;
     }
+    QImage *numBadge;
+    if(nCount<=3)
+        numBadge=new QImage(":/new/prefix1/image/Medal_Bronze.png");
+    else if(nCount<=5)
+        numBadge=new QImage(":/new/prefix1/image/Medal_Silver.png");
+    else
+        numBadge=new QImage(":/new/prefix1/image/Medal_Gold.png");
+    ui->label_numBadge->setPixmap(QPixmap::fromImage(*numBadge));
+
+    QImage *advancesBadge;
+    if(advanceNum<=3)
+        advancesBadge=new QImage(":/new/prefix1/image/Medal_Bronze.png");
+    else if(advanceNum<=5)
+        advancesBadge=new QImage(":/new/prefix1/image/Medal_Silver.png");
+    else
+        advancesBadge=new QImage(":/new/prefix1/image/Medal_Gold.png");
+    ui->label_advancesBadge->setPixmap(QPixmap::fromImage(*advancesBadge));
+
+
     battle->refreshAllPM(allPM);
     refreshMonsTable();
 }
@@ -166,66 +191,6 @@ void MainWindow::refreshMonsTable()
     ui->tableWidget_monsters->sortByColumn(0, Qt::AscendingOrder);
 }
 
-void MainWindow::on_pushButton_LvUp_1_clicked()
-{
-    A->gainExp(expToLvUp[A->level]-expToLvUp[A->level-1]);
-
-    if(A->level==15)
-        ui->pushButton_LvUp_1->setEnabled(false);
-
-    QString info_A=A->getInfomation();
-    ui->labelPM_1->setText(info_A);
-}
-
-void MainWindow::on_pushButton_Attack_1_clicked()
-{
-    int movement=A->move();
-    QString moveInfo;
-    if(movement==ordAttack)
-        moveInfo+=tr("PokeMon A gives a hit on B.");
-    else
-        moveInfo+= tr("PokeMon A uses his limitbreak ")+
-                LimitBreak_toString[movement]+".";
-    ui->label_moveInfo_1->setText(moveInfo);
-}
-
-void MainWindow::on_pushButton_LvMax_1_clicked()
-{
-    A->gainExp(expToLvUp[14]);
-    ui->pushButton_LvMax_1->setEnabled(false);
-    ui->pushButton_LvUp_1->setEnabled(false);
-    QString info_A=A->getInfomation();
-    ui->labelPM_1->setText(info_A);
-
-}
-
-void MainWindow::on_pushButton_Create_1_clicked()
-{
-    delete A;
-    PMType type=(PMType)ui->comboBox_Type_1->currentIndex();
-    PMRarity rarity=(PMRarity)ui->comboBox_Rarity_1->currentIndex();
-    switch (type) {
-    case Strength:
-        A=new PMStrength(rarity);
-        break;
-    case Defense:
-        A=new PMDefense(rarity);
-        break;
-    case Shield:
-        A=new PMShield(rarity);
-        break;
-    case Agility:
-        A=new PMAgility(rarity);
-        break;
-    default:
-        break;
-    }
-    QString info_A=A->getInfomation();
-    ui->labelPM_1->setText(info_A);
-
-    ui->pushButton_LvMax_1->setEnabled(true);
-    ui->pushButton_LvUp_1->setEnabled(true);
-}
 
 QDataStream &operator>>(QDataStream &in, PokeMon *&pm)
 {
@@ -278,8 +243,6 @@ void MainWindow::on_tableWidget_monsters_currentCellChanged(int currentRow, int 
         {
             QString info=pm->getInfomation();
             ui->labelPM_1->setText(info);
-            ui->pushButton_LvMax_1->setEnabled(false);
-            ui->pushButton_LvUp_1->setEnabled(false);
             break;
         }
     }

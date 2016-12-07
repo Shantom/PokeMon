@@ -43,6 +43,8 @@ private slots:
 
     void on_pushButton_skip_clicked();
 
+    void on_pushButton_close_clicked();
+
 public slots:
     void recvPM(PokeMon *src);
     void on_killPM(int id);

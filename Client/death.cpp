@@ -6,6 +6,8 @@ Death::Death(QList<PokeMon *> mons, QWidget *parent) :
     ui(new Ui::Death)
 {
     ui->setupUi(this);
+    QIcon icon(QPixmap(":/new/prefix1/image/leave.png"));
+    setWindowIcon(icon);
     this->show();
     setWindowTitle("Pick one to death!");
     setWindowFlags(Qt::Dialog);

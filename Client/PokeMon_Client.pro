@@ -45,3 +45,6 @@ FORMS    += mainwindow.ui \
     battle.ui \
     death.ui \
     rename.ui
+
+RESOURCES += \
+    src.qrc

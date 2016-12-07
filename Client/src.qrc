@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>image/Medal_Bronze.png</file>
+        <file>image/Medal_Gold.png</file>
+        <file>image/Medal_Silver.png</file>
+        <file>image/pokemon_blackwhite.png</file>
+        <file>image/pokemon_colored.png</file>
+        <file>image/pikachu.png</file>
+        <file>image/egg.png</file>
+        <file>image/leave.png</file>
+        <file>image/background.jpg</file>
+        <file>image/bg.png</file>
+        <file>image/upgrade.png</file>
+        <file>image/duel.png</file>
+    </qresource>
+</RCC>

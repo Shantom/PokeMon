@@ -63,6 +63,22 @@ QStringList Database::allUsers()
 
 }
 
+double Database::getWinRate(QString name)
+{
+    QSqlQuery query;
+    query.exec(QString("SELECT wins, battles FROM users where username='%1'").arg(name));
+    double rate;
+    if(query.next())
+    {
+        int wins=query.value(0).toInt();
+        int battles=query.value(1).toInt();
+        rate=(double)wins/(double)battles;
+    }
+    return rate;
+
+
+}
+
 QList<PokeMon *> Database::pmsOfUser(QString username)
 {
     QSqlQuery query;
@@ -124,6 +140,15 @@ void Database::addPokeMon(QString owner, PokeMon *pm)
     query.addBindValue(QVariant(pm->name));
     query.exec();
     qDebug()<<query.lastError().text();
+}
+
+void Database::updateWinRate(QString name, bool result)
+{
+    QSqlQuery query;
+    query.exec(QString("UPDATE users SET wins=wins+%1, battles=battles+1"
+                          " WHERE username='%2'").arg(int(result)).arg(name));
+    qDebug()<<query.lastError().text();
+
 }
 
 void Database::deletePokeMon(int id)
