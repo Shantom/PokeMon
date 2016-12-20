@@ -11,7 +11,6 @@ PMAgility::PMAgility(PMRarity rarity):PokeMon(rarity)
 
 int PMAgility::move()
 {
-    qsrand(QTime::currentTime().msec()+speed);
     int flag=qrand()%100;
     if(flag>30){
         return ordAttack;
