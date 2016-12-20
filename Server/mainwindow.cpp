@@ -209,7 +209,6 @@ void MainWindow::onSignup(QString name)
     /*randomly create 3 PM to a new user*/
     for(int i=0;i<3;i++)
     {
-        qsrand(QTime::currentTime().msec()+i*i);
         PokeMon *newPM=getRandomPM();
         newPM->setName(name+QString("_%1").arg(i));
         database->addPokeMon(name,newPM);
@@ -412,7 +411,7 @@ void MainWindow::on_getOpponent(quint16 port, QString name, int level,PMRarity r
 //    datagramType type=GETOPPONENT;//type of this datagram
 //    outStream<<type;
 
-    qsrand(QTime::currentTime().msec());
+//    qsrand(QTime::currentTime().msec());
     PMType pmType=(PMType)(qrand()%4);
     PokeMon *opponent;
     switch (pmType) {

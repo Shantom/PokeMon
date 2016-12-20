@@ -11,9 +11,8 @@ PMDefense::PMDefense(PMRarity rarity):PokeMon(rarity)
 
 int PMDefense::move()
 {
-    qsrand(seed++);
+//    qsrand(seed++);
     int flag=qrand()%100;
-//    qDebug()<<flag;
     if(flag>40){
         return OrdAttack;
     }

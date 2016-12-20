@@ -10,9 +10,8 @@ PMStrength::PMStrength(PMRarity rarity):PokeMon(rarity)
 
 int PMStrength::move()
 {
-    qsrand(seed++);
+//    qsrand(seed++);
     int flag=qrand()%100;
-//    qDebug()<<flag;
     if(flag>35){
         return OrdAttack;
     }

@@ -10,7 +10,7 @@ PMStrength::PMStrength(PMRarity rarity):PokeMon(rarity)
 
 int PMStrength::move()
 {
-    qsrand(QTime::currentTime().msec()+speed);
+//    qsrand(QTime::currentTime().msec()+speed);
     int flag=qrand()%100;
     if(flag>20){
         return ordAttack;

@@ -11,7 +11,7 @@ PMDefense::PMDefense(PMRarity rarity):PokeMon(rarity)
 
 int PMDefense::move()
 {
-    qsrand(QTime::currentTime().msec()+speed);
+//    qsrand(QTime::currentTime().msec()+speed);
     int flag=qrand()%100;
     if(flag>20){
         return ordAttack;

@@ -39,6 +39,7 @@ Battle::Battle(QString name, quint16 port, QList<PokeMon *> allPM, QWidget *pare
     ui->pushButton_UpTour->setIconSize(QSize(64,64));
     ui->pushButton_DuRace->setIcon(QIcon(":/new/prefix1/image/duel.png"));
     ui->pushButton_DuRace->setIconSize(QSize(64,64));
+    qsrand(QTime::currentTime().msec());
 }
 
 Battle::~Battle()
@@ -233,7 +234,6 @@ void Battle::on_pushButton_Battle_clicked()
         else if(battleType==2)            //lose a dual race
         {
 
-            qsrand(QTime::currentTime().msec());
             auto tmpPMs=allPM;
             selectedPM.clear();
             for(int i=0;i<3;i++)
@@ -243,10 +243,7 @@ void Battle::on_pushButton_Battle_clicked()
                 tmpPMs.removeAt(key);
                 if(tmpPMs.empty())
                     break;
-                qsrand(QTime::currentTime().msec()+key);
             }
-//            death=new Death(selectedPM,this);
-//            death->show();
 
             Death death(selectedPM,this);
             if(death.exec())

@@ -48,6 +48,7 @@ Fighting::Fighting(PokeMon *a, PokeMon *b)
     healthPoint_B=B->maxHealth;
     stateA={0,0,0,0};
     stateB={0,0,0,0};
+    qsrand(QTime::currentTime().msec());
 
 }
 
@@ -64,7 +65,6 @@ QList<movement> Fighting::procedure()
         if(rest_A<rest_B){ // A 攻击
             time+=rest_A;
 
-            qsrand(time);
             int dice=qrand()%100;
             bool critical=false;
             bool miss=false;
@@ -174,7 +174,6 @@ QList<movement> Fighting::procedure()
         {
             time+=rest_B;
 
-            qsrand(time);
             int dice=qrand()%100;
             bool critical=false;
             bool miss=false;
