@@ -2,3 +2,9 @@ Debug /
 Profile /
 Release /
 *.user
+_minted-*/
+*.aux
+*.log
+*.pdf
+*.toc
+*.out
